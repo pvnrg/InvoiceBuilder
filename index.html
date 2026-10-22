@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BillCraft – Invoice Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{--accent:#059669;--accent-soft:#ecfdf5;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:linear-gradient(180deg,#0b1a2e,#0a1220);min-height:100vh;color:var(--ink)}
+header{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px 20px;background:#0f1b2d;border-bottom:1px solid #1e2c42}
+.brand{display:flex;align-items:center;gap:10px;color:#fff}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:#059669;display:grid;place-items:center}
+.brand b{font-family:Outfit;font-size:15px;display:block;line-height:1.1}
+.brand small{font-size:10px;color:#94a3b8}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sw{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;outline:none}
+.sw.on{box-shadow:0 0 0 2px #0f1b2d,0 0 0 4px #fff}
+.btn{display:inline-flex;align-items:center;gap:6px;font:500 12px Inter;color:#e2e8f0;background:#1a283d;border:1px solid #26364f;border-radius:8px;padding:9px 13px;cursor:pointer}
+.btn:hover{background:#22334d}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.1)}
+main{padding:28px 16px 60px;overflow-x:auto}
+.paper{background:#fff;width:100%;max-width:650px;margin:0 auto;padding:32px;border-radius:6px;box-shadow:0 20px 60px #0008;font-size:13px}
+input,textarea{font:inherit;color:inherit;background:transparent;border:0;border-bottom:1px dashed transparent;outline:none;padding:2px 3px;width:100%;border-radius:3px;resize:none}
+input:hover,textarea:hover{background:#f8fafc}
+input:focus,textarea:focus{background:var(--accent-soft);border-bottom-color:var(--accent)}
+::placeholder{color:#cbd5e1}
+.top{display:flex;gap:18px;justify-content:space-between}
+.logo-box{width:80px;height:80px;flex:none;border:1px dashed #cbd5e1;border-radius:6px;display:grid;place-items:center;cursor:pointer;color:#94a3b8;font-size:10px;text-align:center;overflow:hidden;position:relative}
+.logo-box img{max-width:100%;max-height:100%;object-fit:contain}
+.logo-box .x{position:absolute;top:2px;right:2px;background:#fff;border-radius:50%;width:16px;height:16px;line-height:14px;font-size:12px;color:#ef4444;display:none;border:1px solid #fecaca}
+.logo-box:hover .x{display:block}
+.biz{flex:1;min-width:0}
+.biz .name{font:700 18px Outfit;color:var(--accent)}
+.biz .person{font-weight:600;margin-top:4px}
+.biz .small{font-size:11px;color:var(--muted)}
+.inv{width:190px;flex:none;text-align:right}
+.inv h1{margin:0 0 8px;font:700 28px Outfit;letter-spacing:1px;color:var(--accent)}
+.meta{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:5px}
+.meta label{font-size:9px;font-weight:600;letter-spacing:1px;color:#94a3b8}
+.meta input{width:112px;font-family:'JetBrains Mono';font-size:12px;font-weight:500;text-align:right}
+.meta input[type=date]{text-align:left;width:128px}
+hr{border:0;border-top:2px solid var(--accent);margin:20px 0}
+.lbl{font-size:9px;font-weight:600;letter-spacing:1.2px;color:#94a3b8;margin-bottom:5px}
+.bill .cname{font:600 15px Inter}
+.bill textarea{font-size:11px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;margin-top:20px}
+.tbl{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:20px}
+.tbl table{margin:0}
+th{background:var(--accent);color:#fff;font-size:9.5px;letter-spacing:1px;text-align:right;padding:10px 8px;font-weight:600}
+th:first-child{text-align:left;padding-left:14px}
+td{padding:6px 8px;border-top:1px solid var(--line);vertical-align:middle}
+tbody tr:nth-child(odd) td{background:#f8fafc}
+tbody tr:first-child td{border-top:0}
+td input{text-align:right;font-family:'JetBrains Mono';font-size:12px}
+td:first-child input{text-align:left;font-family:Inter;font-weight:500;padding-left:6px}
+.type{border:1px solid var(--accent);color:var(--accent);background:#fff;border-radius:5px;width:28px;height:24px;font-weight:700;cursor:pointer;font-size:12px}
+.amt{font:700 12px 'JetBrains Mono';text-align:right;white-space:nowrap}
+.del{border:0;background:transparent;color:#ef4444;cursor:pointer;font-size:14px;padding:2px 4px;opacity:.7}
+.del:hover{opacity:1}
+.add{margin-top:14px;border:1px dashed var(--accent);color:var(--accent);background:#fff;border-radius:20px;padding:8px 18px;font:500 12px Inter;cursor:pointer}
+.add:hover{background:var(--accent-soft)}
+.bottom{display:flex;gap:28px;margin-top:26px}
+.bottom>div{flex:1}
+.notes textarea{font-size:12px;color:#334155;min-height:60px}
+.words{font-size:10.5px;color:var(--muted);margin-top:10px}
+.words b{color:var(--ink)}
+.row{display:flex;justify-content:space-between;padding:7px 0;font-size:12px;color:#475569}
+.row span:last-child{font-family:'JetBrains Mono';color:var(--ink)}
+.grand{display:flex;justify-content:space-between;align-items:center;background:var(--accent);color:#fff;border-radius:10px;padding:14px 16px;margin-top:6px}
+.grand span:first-child{font-size:10px;font-weight:700;letter-spacing:1px}
+.grand span:last-child{font:700 20px 'JetBrains Mono'}
+.foot{text-align:center;font-size:10px;color:#94a3b8;margin-top:28px;padding-top:12px;border-top:1px solid var(--line)}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 18px;border-radius:8px;font-size:12px;opacity:0;transition:.25s;pointer-events:none}
+#toast.show{opacity:1}
+@media(max-width:620px){.paper{padding:18px;min-width:600px}}
+@media print{header,#toast,.add,.del,.logo-box .x{display:none!important}body{background:#fff}main{padding:0}.paper{box-shadow:none;max-width:none}}
+.pdf header,.pdf .add,.pdf .del{display:none}
+.pdf input:hover,.pdf textarea:hover{background:transparent}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div><div><b>BillCraft</b><small>Invoice Builder</small></div></div>
+  <div class="tools">
+    <span id="swatches" style="display:flex;gap:8px;margin-right:6px"></span>
+    <button class="btn" id="saveDef">💾 Save Defaults</button>
+    <button class="btn" id="sample">✨ Sample</button>
+    <button class="btn" id="clear">↻ Clear</button>
+    <button class="btn primary" id="pdf">⬇ Download PDF</button>
+  </div>
+</header>
+<main>
+<div class="paper" id="paper">
+  <div class="top">
+    <div class="logo-box" id="logoBox" title="Upload logo">+ Add logo<span class="x" id="logoX">×</span></div>
+    <input type="file" id="logoFile" accept="image/*" hidden>
+    <div class="biz">
+      <input class="name" data-k="bizName" placeholder="Business name">
+      <input class="person" data-k="owner" placeholder="Owner / contact name">
+      <textarea class="small" data-k="bizAddr" rows="2" placeholder="Business address"></textarea>
+      <input class="small" data-k="bizPhone" placeholder="Phone">
+      <input class="small" data-k="bizEmail" placeholder="Email">
+    </div>
+    <div class="inv">
+      <h1>INVOICE</h1>
+      <div class="meta"><label>NO.</label><input data-k="invNo" placeholder="INV-0001"></div>
+      <div class="meta"><label>DATE</label><input type="date" data-k="date"></div>
+    </div>
+  </div>
+  <hr>
+  <div class="bill">
+    <div class="lbl">BILL TO</div>
+    <input class="cname" data-k="cName" placeholder="Client name">
+    <textarea data-k="cAddr" rows="2" placeholder="Client address &amp; phone"></textarea>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>ITEM / DESCRIPTION</th><th style="width:52px">QTY</th><th style="width:76px">RATE</th><th style="width:100px" colspan="2">DISCOUNT</th><th style="width:104px">AMOUNT</th><th style="width:26px"></th></tr></thead>
+    <tbody id="items"></tbody>
+  </table></div>
+  <button class="add" id="addItem">+ Add Line Item</button>
+  <div class="bottom">
+    <div class="notes"><div class="lbl">NOTES</div><textarea data-k="notes" rows="3" placeholder="Payment terms, thank-you note…"></textarea>
+      <div class="words">Amount in words: <b id="words"></b></div></div>
+    <div>
+      <div class="row"><span>Subtotal</span><span id="sub"></span></div>
+      <div class="row"><span>Total Discount</span><span id="disc"></span></div>
+      <div class="grand"><span>GRAND TOTAL</span><span id="grand"></span></div>
+    </div>
+  </div>
+  <div class="foot">This is a computer-generated invoice.</div>
+</div>
+</main>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s), KEY='billcraft.v1', DEF='billcraft.defaults.v1';
+const COLORS=['#059669','#0284c7','#c2410c'], SOFT=['#ecfdf5','#e0f2fe','#ffedd5'];
+const today=()=>new Date().toISOString().slice(0,10);
+const blank=()=>({bizName:'',owner:'',bizAddr:'',bizPhone:'',bizEmail:'',invNo:'INV-'+new Date().getFullYear()+'-001',date:today(),cName:'',cAddr:'',notes:'',logo:'',color:0,items:[{d:'',q:1,r:0,disc:0,t:'₹'}]});
+const sample=()=>({bizName:'Nova Interiors',owner:'Aarav Mehta',bizAddr:'204, Sunrise Avenue, Linking Road, Mumbai, Maharashtra 400050',bizPhone:'+91 98200 11223',bizEmail:'hello@novainteriors.in',invNo:'INV-2026-014',date:today(),cName:'Priya Sharma',cAddr:'12 Palm Grove, Bandra West, Mumbai 400050\n+91 90040 55667',notes:'Thank you for choosing Nova Interiors! Payment due within 15 days.',logo:'',color:0,items:[{d:'Modular Wardrobe Design',q:2,r:18500,disc:1000,t:'₹'},{d:'Premium Laminate Finish',q:5,r:2400,disc:10,t:'%'},{d:'Site Installation & Labour',q:1,r:7500,disc:500,t:'₹'}]});
+const load=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+const store=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
+let S=load(KEY)||(()=>{const d=load(DEF);return d?{...blank(),...d,items:[{d:'',q:1,r:0,disc:0,t:'₹'}]}:sample()})();
+
+const fmt=n=>'₹'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const lineGross=i=>(+i.q||0)*(+i.r||0);
+const lineDisc=i=>{const g=lineGross(i),d=+i.disc||0;return Math.min(g,i.t==='%'?g*d/100:d)};
+function words(n){
+  const a=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],
+  b=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  const two=x=>x<20?a[x]:b[Math.floor(x/10)]+(x%10?' '+a[x%10]:'');
+  const three=x=>(x>=100?a[Math.floor(x/100)]+' Hundred'+(x%100?' ':''):'')+(x%100?two(x%100):'');
+  const int=x=>{if(!x)return'Zero';const p=[];
+    [[1e7,'Crore'],[1e5,'Lakh'],[1e3,'Thousand']].forEach(([v,nm])=>{const q=Math.floor(x/v);if(q){p.push((q<100?two(q):three(q))+' '+nm);x%=v}});
+    if(x)p.push(three(x));return p.join(' ')};
+  const r=Math.floor(n),p=Math.round((n-r)*100);
+  return 'Rupees '+int(r)+(p?' and '+two(p)+' Paise':'')+' Only';
+}
+function calc(){
+  const gross=S.items.reduce((s,i)=>s+lineGross(i),0),disc=S.items.reduce((s,i)=>s+lineDisc(i),0),grand=gross-disc;
+  $('#sub').textContent=fmt(gross);$('#disc').textContent='− '+fmt(disc);$('#grand').textContent=fmt(grand);
+  $('#words').textContent=words(grand);
+  [...document.querySelectorAll('#items tr')].forEach((tr,n)=>tr.querySelector('.amt').textContent=fmt(lineGross(S.items[n])-lineDisc(S.items[n])));
+}
+function save(){store(KEY,S)}
+function renderItems(){
+  $('#items').innerHTML='';
+  S.items.forEach((it,n)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><input data-f="d" placeholder="Item description"></td><td><input data-f="q" type="number" min="0" step="any"></td><td><input data-f="r" type="number" min="0" step="any"></td><td><input data-f="disc" type="number" min="0" step="any"></td><td style="padding-left:0"><button class="type" title="Toggle ₹ / %"></button></td><td class="amt"></td><td><button class="del" title="Remove">🗑</button></td>`;
+    tr.querySelectorAll('input').forEach(inp=>{inp.value=it[inp.dataset.f]??'';inp.oninput=()=>{it[inp.dataset.f]=inp.type==='number'?inp.value:inp.value;calc();save()}});
+    const tb=tr.querySelector('.type');tb.textContent=it.t;
+    tb.onclick=()=>{it.t=it.t==='₹'?'%':'₹';tb.textContent=it.t;calc();save()};
+    tr.querySelector('.del').onclick=()=>{if(S.items.length>1)S.items.splice(n,1);else S.items[0]={d:'',q:1,r:0,disc:0,t:'₹'};renderItems();save()};
+    $('#items').appendChild(tr);
+  });
+  calc();
+}
+function theme(){
+  const c=COLORS[S.color]||COLORS[0];
+  document.documentElement.style.setProperty('--accent',c);
+  document.documentElement.style.setProperty('--accent-soft',SOFT[S.color]||SOFT[0]);
+  document.querySelectorAll('.sw').forEach((s,i)=>s.classList.toggle('on',i===S.color));
+}
+function logo(){
+  const b=$('#logoBox');
+  b.innerHTML=S.logo?`<img src="${S.logo}" alt="logo"><span class="x" id="logoX">×</span>`:'+ Add logo<span class="x" id="logoX">×</span>';
+  $('#logoX').onclick=e=>{e.stopPropagation();S.logo='';logo();save()};
+}
+function render(){
+  document.querySelectorAll('[data-k]').forEach(el=>el.value=S[el.dataset.k]??'');
+  theme();logo();renderItems();
+}
+document.querySelectorAll('[data-k]').forEach(el=>el.addEventListener('input',()=>{S[el.dataset.k]=el.value;save()}));
+COLORS.forEach((c,i)=>{const b=document.createElement('button');b.className='sw';b.style.background=c;b.title='Theme '+(i+1);b.onclick=()=>{S.color=i;theme();save()};$('#swatches').appendChild(b)});
+$('#logoBox').onclick=()=>$('#logoFile').click();
+$('#logoFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{
+  const img=new Image();img.onload=()=>{const m=300,k=Math.min(1,m/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=img.width*k;c.height=img.height*k;c.getContext('2d').drawImage(img,0,0,c.width,c.height);S.logo=c.toDataURL('image/png');logo();save()};img.src=r.result};r.readAsDataURL(f);e.target.value=''};
+$('#addItem').onclick=()=>{S.items.push({d:'',q:1,r:0,disc:0,t:'₹'});renderItems();save();const r=document.querySelectorAll('#items tr');r[r.length-1].querySelector('input').focus()};
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1800)}
+$('#saveDef').onclick=()=>{const{bizName,owner,bizAddr,bizPhone,bizEmail,notes,logo,color}=S;toast(store(DEF,{bizName,owner,bizAddr,bizPhone,bizEmail,notes,logo,color})?'Defaults saved':'Could not save')};
+$('#sample').onclick=()=>{S=sample();render();save();toast('Sample loaded')};
+$('#clear').onclick=()=>{const d=load(DEF)||{};S={...blank(),...d,items:[{d:'',q:1,r:0,disc:0,t:'₹'}]};render();save();toast('Cleared')};
+$('#pdf').onclick=async()=>{
+  const p=$('#paper'),name=(S.invNo||'invoice').replace(/[^\w-]+/g,'_')+'.pdf';
+  if(!window.html2pdf)return window.print();
+  document.body.classList.add('pdf');
+  try{await html2pdf().set({margin:8,filename:name,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(p).save()}
+  catch(e){window.print()}
+  document.body.classList.remove('pdf');
+};
+render();
+</script>
+</body>
+</html>
