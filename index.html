@@ -77,7 +77,42 @@ td:first-child input{text-align:left;font-family:Inter;font-weight:500;padding-l
 .foot{text-align:center;font-size:10px;color:#94a3b8;margin-top:28px;padding-top:12px;border-top:1px solid var(--line)}
 #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 18px;border-radius:8px;font-size:12px;opacity:0;transition:.25s;pointer-events:none}
 #toast.show{opacity:1}
-@media(max-width:620px){.paper{padding:18px;min-width:600px}}
+body.narrow header{padding:10px 12px}
+body.narrow .tools{width:100%;justify-content:space-between}
+body.narrow .tools .btn{padding:8px 10px}
+body.narrow #swatches{width:100%;margin:0 0 2px!important}
+body.narrow main{padding:14px 8px 50px;overflow-x:hidden}
+body.narrow .paper{padding:18px 14px}
+body.narrow input,body.narrow textarea{font-size:16px}
+body.narrow .top{flex-direction:column}
+body.narrow .top .logo-box{width:70px;height:70px}
+body.narrow .inv{width:100%;order:-1;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;text-align:left;gap:4px 10px}
+body.narrow .inv h1{width:100%;margin:0 0 2px;font-size:24px}
+body.narrow .meta{margin:0;flex:1;min-width:150px;justify-content:flex-start}
+body.narrow .meta input{text-align:left;flex:1;width:auto;min-width:0}
+body.narrow .meta input[type=date]{width:auto}
+body.narrow .top{gap:12px}
+body.narrow .tbl{border:0;overflow:visible}
+body.narrow thead{display:none}
+body.narrow table,body.narrow tbody{display:block}
+body.narrow tbody tr{display:grid;grid-template-columns:1fr 1fr 1fr 34px;gap:6px 8px;align-items:end;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;background:#f8fafc}
+body.narrow tbody tr:nth-child(odd) td{background:transparent}
+body.narrow td{display:block;border:0;padding:0}
+body.narrow td:nth-child(1){grid-column:1/4}
+body.narrow td:nth-child(7){grid-column:4;grid-row:1;text-align:right}
+body.narrow td:nth-child(2){grid-column:1}
+body.narrow td:nth-child(3){grid-column:2}
+body.narrow td:nth-child(4){grid-column:3}
+body.narrow td:nth-child(5){grid-column:4;padding:0!important}
+body.narrow td:nth-child(6){grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--line);padding-top:8px;font-size:14px}
+body.narrow td:nth-child(6)::before{content:'Amount';font:600 10px Inter;letter-spacing:1px;color:#94a3b8;text-transform:uppercase}
+body.narrow td[data-label]:not(.amt)::before{content:attr(data-label);display:block;font:600 9px Inter;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;margin-bottom:2px}
+body.narrow td input{background:#fff;border:1px solid var(--line);border-radius:6px;padding:7px 8px}
+body.narrow .type{width:34px;height:36px}
+body.narrow .del{font-size:18px;padding:4px}
+body.narrow .bottom{flex-direction:column;gap:18px}
+body.narrow .add{width:100%}
+body.narrow #toast{width:max-content;max-width:90%}
 @media print{header,#toast,.add,.del,.logo-box .x{display:none!important}body{background:#fff}main{padding:0}.paper{box-shadow:none;max-width:none}}
 .pdf header,.pdf .add,.pdf .del{display:none}
 .pdf input:hover,.pdf textarea:hover{background:transparent}
@@ -171,7 +206,7 @@ function renderItems(){
   $('#items').innerHTML='';
   S.items.forEach((it,n)=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><input data-f="d" placeholder="Item description"></td><td><input data-f="q" type="number" min="0" step="any"></td><td><input data-f="r" type="number" min="0" step="any"></td><td><input data-f="disc" type="number" min="0" step="any"></td><td style="padding-left:0"><button class="type" title="Toggle ₹ / %"></button></td><td class="amt"></td><td><button class="del" title="Remove">🗑</button></td>`;
+    tr.innerHTML=`<td><input data-f="d" placeholder="Item description"></td><td data-label="Qty"><input data-f="q" type="number" min="0" step="any"></td><td data-label="Rate"><input data-f="r" type="number" min="0" step="any"></td><td data-label="Discount"><input data-f="disc" type="number" min="0" step="any"></td><td data-label="&nbsp;" style="padding-left:0"><button class="type" title="Toggle ₹ / %"></button></td><td class="amt"></td><td><button class="del" title="Remove">🗑</button></td>`;
     tr.querySelectorAll('input').forEach(inp=>{inp.value=it[inp.dataset.f]??'';inp.oninput=()=>{it[inp.dataset.f]=inp.type==='number'?inp.value:inp.value;calc();save()}});
     const tb=tr.querySelector('.type');tb.textContent=it.t;
     tb.onclick=()=>{it.t=it.t==='₹'?'%':'₹';tb.textContent=it.t;calc();save()};
@@ -208,11 +243,12 @@ $('#clear').onclick=()=>{const d=load(DEF)||{};S={...blank(),...d,items:[{d:'',q
 $('#pdf').onclick=async()=>{
   const p=$('#paper'),name=(S.invNo||'invoice').replace(/[^\w-]+/g,'_')+'.pdf';
   if(!window.html2pdf)return window.print();
-  document.body.classList.add('pdf');
-  try{await html2pdf().set({margin:8,filename:name,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(p).save()}
+  document.body.classList.add('pdf');const wasNarrow=document.body.classList.contains('narrow');document.body.classList.remove('narrow');p.style.width='650px';
+  try{await html2pdf().set({margin:8,filename:name,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,windowWidth:900},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(p).save()}
   catch(e){window.print()}
-  document.body.classList.remove('pdf');
+  p.style.width='';document.body.classList.remove('pdf');if(wasNarrow)document.body.classList.add('narrow');
 };
+const mq=()=>document.body.classList.toggle('narrow',innerWidth<640);mq();addEventListener('resize',mq);
 render();
 </script>
 </body>
