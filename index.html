@@ -83,7 +83,7 @@ body.narrow .tools .btn{padding:8px 10px}
 body.narrow #swatches{width:100%;margin:0 0 2px!important}
 body.narrow main{padding:14px 8px 50px;overflow-x:hidden}
 body.narrow .paper{padding:18px 14px}
-body.narrow input,body.narrow textarea{font-size:16px}
+body.narrow .paper input,body.narrow .paper textarea{font-size:16px}
 body.narrow .top{flex-direction:column}
 body.narrow .top .logo-box{width:70px;height:70px}
 body.narrow .inv{width:100%;order:-1;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;text-align:left;gap:4px 10px}
@@ -93,29 +93,63 @@ body.narrow .meta input{text-align:left;flex:1;width:auto;min-width:0}
 body.narrow .meta input[type=date]{width:auto}
 body.narrow .top{gap:12px}
 body.narrow .tbl{border:0;overflow:visible}
-body.narrow thead{display:none}
-body.narrow table,body.narrow tbody{display:block}
-body.narrow tbody tr{display:grid;grid-template-columns:1fr 1fr 1fr 34px;gap:6px 8px;align-items:end;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;background:#f8fafc}
-body.narrow tbody tr:nth-child(odd) td{background:transparent}
-body.narrow td{display:block;border:0;padding:0}
-body.narrow td:nth-child(1){grid-column:1/4}
-body.narrow td:nth-child(7){grid-column:4;grid-row:1;text-align:right}
-body.narrow td:nth-child(2){grid-column:1}
-body.narrow td:nth-child(3){grid-column:2}
-body.narrow td:nth-child(4){grid-column:3}
-body.narrow td:nth-child(5){grid-column:4;padding:0!important}
-body.narrow td:nth-child(6){grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--line);padding-top:8px;font-size:14px}
-body.narrow td:nth-child(6)::before{content:'Amount';font:600 10px Inter;letter-spacing:1px;color:#94a3b8;text-transform:uppercase}
-body.narrow td[data-label]:not(.amt)::before{content:attr(data-label);display:block;font:600 9px Inter;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;margin-bottom:2px}
-body.narrow td input{background:#fff;border:1px solid var(--line);border-radius:6px;padding:7px 8px}
+body.narrow .paper thead{display:none}
+body.narrow .paper table,body.narrow .paper tbody{display:block}
+body.narrow .paper tbody tr{display:grid;grid-template-columns:1fr 1fr 1fr 34px;gap:6px 8px;align-items:end;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;background:#f8fafc}
+body.narrow .paper tbody tr:nth-child(odd) td{background:transparent}
+body.narrow .paper td{display:block;border:0;padding:0}
+body.narrow .paper td:nth-child(1){grid-column:1/4}
+body.narrow .paper td:nth-child(7){grid-column:4;grid-row:1;text-align:right}
+body.narrow .paper td:nth-child(2){grid-column:1}
+body.narrow .paper td:nth-child(3){grid-column:2}
+body.narrow .paper td:nth-child(4){grid-column:3}
+body.narrow .paper td:nth-child(5){grid-column:4;padding:0!important}
+body.narrow .paper td:nth-child(6){grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--line);padding-top:8px;font-size:14px}
+body.narrow .paper td:nth-child(6)::before{content:'Amount';font:600 10px Inter;letter-spacing:1px;color:#94a3b8;text-transform:uppercase}
+body.narrow .paper td[data-label]:not(.amt)::before{content:attr(data-label);display:block;font:600 9px Inter;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;margin-bottom:2px}
+body.narrow .paper td input{background:#fff;border:1px solid var(--line);border-radius:6px;padding:7px 8px}
 body.narrow .type{width:34px;height:36px}
 body.narrow .del{font-size:18px;padding:4px}
 body.narrow .bottom{flex-direction:column;gap:18px}
 body.narrow .add{width:100%}
 body.narrow #toast{width:max-content;max-width:90%}
-@media print{header,#toast,.add,.del,.logo-box .x{display:none!important}body{background:#fff}main{padding:0}.paper{box-shadow:none;max-width:none}}
-.pdf header,.pdf .add,.pdf .del{display:none}
-.pdf input:hover,.pdf textarea:hover{background:transparent}
+#printView{display:none}
+.ps{width:794px;padding:40px 44px;background:#fff;color:#0f172a;font:13px/1.45 Inter,sans-serif}
+.ps .hd{display:flex;justify-content:space-between;gap:24px}
+.ps .hl{display:flex;gap:16px;flex:1;min-width:0}
+.ps .hl img{width:80px;height:80px;object-fit:contain;flex:none}
+.ps .bn{font:700 20px Outfit,sans-serif;color:var(--accent)}
+.ps .ow{font-weight:600;margin-top:3px}
+.ps .sm{font-size:11.5px;color:#64748b;white-space:pre-wrap;overflow-wrap:anywhere}
+.ps .hr{text-align:right;flex:none}
+.ps .hr h1{margin:0 0 8px;font:700 30px Outfit,sans-serif;letter-spacing:1px;color:var(--accent)}
+.ps .hr div{font:12px 'JetBrains Mono',monospace;margin-top:3px}
+.ps .hr small{font:600 9px Inter;letter-spacing:1px;color:#94a3b8;margin-right:8px}
+.ps hr{border:0;border-top:2px solid var(--accent);margin:22px 0 18px}
+.ps .lb{font-size:9px;font-weight:600;letter-spacing:1.2px;color:#94a3b8;margin-bottom:4px}
+.ps .cn{font:600 15px Inter,sans-serif}
+.ps table{width:100%;border-collapse:collapse;margin-top:22px;table-layout:fixed}
+.ps th{background:var(--accent);color:#fff;font-size:9.5px;letter-spacing:1px;padding:10px 8px;text-align:right}
+.ps th:first-child{text-align:left;padding-left:12px}
+.ps td{padding:9px 8px;border-bottom:1px solid #e2e8f0;text-align:right;font:12px 'JetBrains Mono',monospace;vertical-align:top}
+.ps td:first-child{text-align:left;font:500 13px Inter,sans-serif;padding-left:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ps tr{break-inside:avoid;page-break-inside:avoid}
+.ps tbody tr:nth-child(odd) td{background:#f8fafc}
+.ps td.a{font-weight:700}
+.ps .bt{display:flex;gap:32px;margin-top:26px;break-inside:avoid}
+.ps .bt>div{flex:1}
+.ps .nt{font-size:12px;color:#334155;white-space:pre-wrap;overflow-wrap:anywhere}
+.ps .wd{font-size:11px;color:#64748b;margin-top:12px}
+.ps .wd b{color:#0f172a}
+.ps .rw{display:flex;justify-content:space-between;padding:7px 0;font-size:12px;color:#475569}
+.ps .rw span:last-child{font-family:'JetBrains Mono',monospace;color:#0f172a}
+.ps .gt{display:flex;justify-content:space-between;align-items:center;background:var(--accent);color:#fff;border-radius:10px;padding:14px 16px;margin-top:6px}
+.ps .gt span:first-child{font-size:10px;font-weight:700;letter-spacing:1px}
+.ps .gt span:last-child{font:700 20px 'JetBrains Mono',monospace}
+.ps .ft{text-align:center;font-size:10px;color:#94a3b8;margin-top:30px;padding-top:12px;border-top:1px solid #e2e8f0}
+.ps *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+@page{size:A4;margin:0}
+@media print{body>*:not(#printView){display:none!important}body{background:#fff}#printView{display:block}.ps{width:auto;margin:0 auto;max-width:794px}}
 </style>
 </head>
 <body>
@@ -170,6 +204,7 @@ body.narrow #toast{width:max-content;max-width:90%}
   <div class="foot">This is a computer-generated invoice.</div>
 </div>
 </main>
+<div id="printView"></div>
 <div id="toast"></div>
 <script>
 const $=s=>document.querySelector(s), KEY='billcraft.v1', DEF='billcraft.defaults.v1';
@@ -240,13 +275,30 @@ let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('sh
 $('#saveDef').onclick=()=>{const{bizName,owner,bizAddr,bizPhone,bizEmail,notes,logo,color}=S;toast(store(DEF,{bizName,owner,bizAddr,bizPhone,bizEmail,notes,logo,color})?'Defaults saved':'Could not save')};
 $('#sample').onclick=()=>{S=sample();render();save();toast('Sample loaded')};
 $('#clear').onclick=()=>{const d=load(DEF)||{};S={...blank(),...d,items:[{d:'',q:1,r:0,disc:0,t:'₹'}]};render();save();toast('Cleared')};
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dmy=d=>d?d.split('-').reverse().join('-'):'';
+const num=n=>(+n||0).toLocaleString('en-IN',{maximumFractionDigits:2});
+function printHTML(){
+  const gross=S.items.reduce((s,i)=>s+lineGross(i),0),disc=S.items.reduce((s,i)=>s+lineDisc(i),0),grand=gross-disc;
+  const rows=S.items.filter(i=>i.d||lineGross(i)).map(i=>`<tr><td>${esc(i.d)}</td><td>${num(i.q)}</td><td>${num(i.r)}</td><td>${+i.disc?(i.t==='%'?num(i.disc)+'%':'₹'+num(i.disc)):'—'}</td><td class="a">${fmt(lineGross(i)-lineDisc(i))}</td></tr>`).join('');
+  return `<div class="ps"><div class="hd"><div class="hl">${S.logo?`<img src="${S.logo}">`:''}<div style="min-width:0"><div class="bn">${esc(S.bizName)}</div><div class="ow">${esc(S.owner)}</div><div class="sm">${esc(S.bizAddr)}</div><div class="sm" style="margin-top:6px">${esc(S.bizPhone)}<br>${esc(S.bizEmail)}</div></div></div>
+  <div class="hr"><h1>INVOICE</h1><div><small>NO.</small>${esc(S.invNo)}</div><div><small>DATE</small>${dmy(S.date)}</div></div></div><hr>
+  <div class="lb">BILL TO</div><div class="cn">${esc(S.cName)}</div><div class="sm">${esc(S.cAddr)}</div>
+  <table><colgroup><col style="width:38%"><col style="width:9%"><col style="width:17%"><col style="width:14%"><col style="width:22%"></colgroup><thead><tr><th>ITEM / DESCRIPTION</th><th>QTY</th><th>RATE</th><th>DISCOUNT</th><th>AMOUNT</th></tr></thead><tbody>${rows}</tbody></table>
+  <div class="bt"><div><div class="lb">NOTES</div><div class="nt">${esc(S.notes)}</div><div class="wd">Amount in words: <b>${words(grand)}</b></div></div>
+  <div><div class="rw"><span>Subtotal</span><span>${fmt(gross)}</span></div><div class="rw"><span>Total Discount</span><span>− ${fmt(disc)}</span></div><div class="gt"><span>GRAND TOTAL</span><span>${fmt(grand)}</span></div></div></div>
+  <div class="ft">This is a computer-generated invoice.</div></div>`;
+}
+const pv=$('#printView');
+addEventListener('beforeprint',()=>{pv.innerHTML=printHTML()});
 $('#pdf').onclick=async()=>{
-  const p=$('#paper'),name=(S.invNo||'invoice').replace(/[^\w-]+/g,'_')+'.pdf';
+  const name=(S.invNo||'invoice').replace(/[^\w-]+/g,'_')+'.pdf';
+  pv.innerHTML=printHTML();
   if(!window.html2pdf)return window.print();
-  document.body.classList.add('pdf');const wasNarrow=document.body.classList.contains('narrow');document.body.classList.remove('narrow');p.style.width='650px';
-  try{await html2pdf().set({margin:8,filename:name,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,windowWidth:900},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(p).save()}
+  Object.assign(pv.style,{display:'block',position:'absolute',left:'-10000px',top:'0'});
+  try{await html2pdf().set({margin:0,filename:name,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,windowWidth:794},pagebreak:{mode:['css','avoid-all']},jsPDF:{unit:'px',format:[794,1123],hotfixes:['px_scaling'],orientation:'portrait'}}).from(pv.firstElementChild).save()}
   catch(e){window.print()}
-  p.style.width='';document.body.classList.remove('pdf');if(wasNarrow)document.body.classList.add('narrow');
+  pv.removeAttribute('style');
 };
 const mq=()=>document.body.classList.toggle('narrow',innerWidth<640);mq();addEventListener('resize',mq);
 render();
